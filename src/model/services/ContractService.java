@@ -1,7 +1,5 @@
 package model.services;
 
-import java.util.List;
-import java.util.ArrayList;
 import java.time.LocalDate;
 
 import model.entities.Contract;
@@ -17,21 +15,19 @@ public class ContractService {
 	
 	public void processContract(Contract contract, Integer months) {
 		
-		List<Installment> installments = new ArrayList<>();
 		double installmentValue = contract.getTotalValue() / months;
 		
 		for (int i=1; i<=months; i++) {
-			double amount = installmentValue + onlinePaymentService.interest(installmentValue, i);
-			amount += onlinePaymentService.paymentFee(amount);
+			double interest = onlinePaymentService.interest(installmentValue, i);
+			double fee = onlinePaymentService.paymentFee(installmentValue + interest);
+			double quota = installmentValue + interest + fee;
 			
 			LocalDate dueDate = contract.getDate().plusMonths(i);
 			
-			Installment installment = new Installment(dueDate, amount);
+			Installment installment = new Installment(dueDate, quota);
 			
-			installments.add(installment);
+			contract.getInstallments().add(installment);
 		}
-		
-		contract.setInstallments(installments);
 		
 	}
 	

@@ -19,7 +19,6 @@ public class Program {
 		
 		DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		
-		//Contract instance
 		System.out.println("Enter the contract data");
 		System.out.print("Number: ");
 		int number = sc.nextInt();
@@ -36,12 +35,11 @@ public class Program {
 		
 		Contract contract = new Contract(number, date, totalValue);
 		
-		//ContractService instance
 		ContractService contractService = new ContractService(new PaypalService());
 		
 		contractService.processContract(contract, months);
 		
-		System.out.println("Parcelas");
+		System.out.println("Installments");
 		for (Installment installment : contract.getInstallments()) {
 			
 			System.out.println(installment.getDueDate().format(fmt) + " - " + String.format("%.2f", installment.getAmount()));
